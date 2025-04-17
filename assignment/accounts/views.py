@@ -5,13 +5,37 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.permissions import AllowAny
+from .serializers import SignupSerializer
+
 # Create your views here.
+
+# 회원가입 기능
+class SignupView(APIView):
+    # 모든 사용자가 접근 가능하도록 설정
+    permission_classes = [AllowAny]
+
+    # 회원가입 기능
+    # DB에 저장하는 기능이므로 POST 요청을 사용
+    def post(self, request):
+        # 요청 데이터를 직렬화
+        serializer = SignupSerializer(data=request.data)
+
+        # 직렬화된 데이터가 유효한 경우
+        if serializer.is_valid(raise_exception=True):
+            # 데이터를 DB에 저장
+            user = serializer.save()
+            return Response({
+                'username': user.username,
+                'nickname': user.nickname
+            }, status=status.HTTP_201_CREATED)
+
 # 로그인 기능
 class LoginView(APIView):
     # 모든 사용자가 접근 가능하도록 설정
     permission_classes = [AllowAny]
 
     # 로그인 기능
+    # 서버의 상태를 변경하는 기능이므로 POST 요청을 사용
     def post(self, request):
         # 요청 데이터에서 아이디와 비밀번호를 가져옴
         username = request.data.get('username')

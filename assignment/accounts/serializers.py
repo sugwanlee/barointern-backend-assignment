@@ -1,7 +1,41 @@
 from rest_framework import serializers
-from .models import User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.db import IntegrityError
 
-class UserSerializer(serializers.ModelSerializer):
+User = get_user_model()
+
+class SignupSerializer(serializers.ModelSerializer):
+    # 비밀번호 필드를 쓰기 전용으로 설정
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+
+    # 모델과 필드 설정
     class Meta:
         model = User
-        fields = ['username', 'password', 'nickname']
+        fields = ('username', 'password', 'nickname')
+        extra_kwargs = {
+            'username': {'required': True},
+            'nickname': {'required': True}
+        }
+
+    # 데이터 저장 기능
+    def create(self, validated_data):
+        # 데이터 저장 시도
+        try:
+            user = User.objects.create(
+                username=validated_data['username'],
+                nickname=validated_data['nickname']
+            )
+            # 비밀번호 설정
+            user.set_password(validated_data['password'])
+            # 데이터 저장
+            user.save()
+            return user
+        except IntegrityError:
+            # 이미 가입된 사용자인 경우 오류 발생
+                raise serializers.ValidationError({
+                "error": {
+                    "code": "USER_ALREADY_EXISTS",
+                    "message": "이미 가입된 사용자입니다."
+                }
+            })
