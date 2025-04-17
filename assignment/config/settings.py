@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     # Third party
     'rest_framework',
     'rest_framework_simplejwt',
-    'drf_yasg',
+    'drf_spectacular',
     # Local apps
     'accounts',
 ]
@@ -118,8 +118,16 @@ REST_FRAMEWORK = {
     ),
     'EXCEPTION_HANDLER': 'accounts.exception_handler.custom_exception_handler',
     'NON_FIELD_ERRORS_KEY': 'error',
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Assignment API',
+    'DESCRIPTION': 'Assignment API',
+    'VERSION': '1.0.0',
+    # OTHER SETTINGS
+}
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
