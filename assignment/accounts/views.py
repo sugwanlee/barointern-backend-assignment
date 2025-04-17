@@ -4,10 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import SignupSerializer
-
-# Create your views here.
+from rest_framework import serializers
 
 # 회원가입 기능
 class SignupAPIView(APIView):
@@ -21,13 +20,18 @@ class SignupAPIView(APIView):
         serializer = SignupSerializer(data=request.data)
 
         # 직렬화된 데이터가 유효한 경우
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             # 데이터를 DB에 저장
-            user = serializer.save()
-            return Response({
-                'username': user.username,
-                'nickname': user.nickname
-            }, status=status.HTTP_201_CREATED)
+            try:
+                user = serializer.save()
+                return Response({
+                    'username': user.username,
+                    'nickname': user.nickname
+                }, status=status.HTTP_201_CREATED)
+            except serializers.ValidationError as e:
+                return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 로그인 기능
 class LoginAPIView(APIView):
@@ -64,5 +68,12 @@ class LoginAPIView(APIView):
         else:
             return Response(
                 {"error": {"code": "INVALID_CREDENTIALS", "message": "아이디 또는 비밀번호가 올바르지 않습니다."}},
-                status=status.HTTP_401_UNAUTHORIZED
+                status=status.HTTP_400_BAD_REQUEST
             )
+
+# 보호된 엔드포인트 예시
+class AuthTestAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        return Response({"message": "인증 성공"}, status=status.HTTP_200_OK)
