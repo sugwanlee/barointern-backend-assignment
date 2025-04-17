@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.db import IntegrityError
 
@@ -34,16 +34,8 @@ class SignupSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-    # 필수 필드 검증
+    # 검증
     def validate(self, data):
-        # 필수 필드 검증
-        if not data.get('username') or not data.get('password') or not data.get('nickname'):
-            raise serializers.ValidationError({
-                "error": {
-                    "code": "MISSING_CREDENTIALS",
-                    "message": "아이디, 비밀번호, 닉네임을 모두 입력해주세요."
-                }
-            })
         
         # 중복 사용자 검증
         if User.objects.filter(username=data.get('username')).exists():
@@ -54,4 +46,29 @@ class SignupSerializer(serializers.ModelSerializer):
                 }
             })
         
+        return data
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, data):
+        
+        # body에 아이디와 비밀번호가 있는지 검증
+        username = data.get('username')
+        password = data.get('password')
+        
+        # 사용자 인증
+        user = authenticate(username=username, password=password)
+        
+        if not user:
+            raise serializers.ValidationError({
+                "error": {
+                    "code": "INVALID_CREDENTIALS",
+                    "message": "아이디 또는 비밀번호가 올바르지 않습니다."
+                }
+            })
+            
+        # 인증 성공한 사용자 정보 반환
+        data['user'] = user
         return data

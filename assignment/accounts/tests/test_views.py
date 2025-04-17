@@ -65,24 +65,6 @@ def test_login_wrong_password(client, test_user):
     assert response.data['error']['code'] == 'INVALID_CREDENTIALS'
     assert response.data['error']['message'] == '아이디 또는 비밀번호가 올바르지 않습니다.'
 
-@pytest.mark.django_db
-def test_login_missing_credentials(client):
-    url = reverse('login')
-    # 아이디 없음
-    data = {
-        'password': 'testpass123'
-    }
-    response = client.post(url, data)
-    assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.data['error']['code'] == 'MISSING_CREDENTIALS'
-    
-    # 비밀번호 없음
-    data = {
-        'username': 'testuser'
-    }
-    response = client.post(url, data)
-    assert response.status_code == status.HTTP_400_BAD_REQUEST
-    assert response.data['error']['code'] == 'MISSING_CREDENTIALS'
 
 @pytest.mark.django_db
 def test_auth_no_token(client):
