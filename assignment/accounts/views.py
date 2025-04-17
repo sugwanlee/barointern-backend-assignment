@@ -10,7 +10,7 @@ from .serializers import SignupSerializer
 # Create your views here.
 
 # 회원가입 기능
-class SignupView(APIView):
+class SignupAPIView(APIView):
     # 모든 사용자가 접근 가능하도록 설정
     permission_classes = [AllowAny]
 
@@ -30,7 +30,7 @@ class SignupView(APIView):
             }, status=status.HTTP_201_CREATED)
 
 # 로그인 기능
-class LoginView(APIView):
+class LoginAPIView(APIView):
     # 모든 사용자가 접근 가능하도록 설정
     permission_classes = [AllowAny]
 
