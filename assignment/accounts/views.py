@@ -33,20 +33,19 @@ schemas.py에서 API 문서화 관련 코드를 모듈화하여:
 - 모든 API 응답이 일관된 형식을 유지하도록 표준화했습니다.
 """
 
-
-# 회원가입 기능
+@extend_schema(
+    tags=["Signup"],
+    operation_id="2_signup",
+    description="회원가입을 위한 API.",
+    request=SignupSerializer,
+    responses={201: SignupSerializer, 400: ErrorResponseSerializer},
+    examples=[SIGNUP_REQUEST_EXAMPLE, SIGNUP_SUCCESS_EXAMPLE, SIGNUP_ERROR_EXAMPLE],
+)
 class SignupAPIView(APIView):
     # 모든 사용자가 접근 가능하도록 설정
     permission_classes = [AllowAny]
 
-    @extend_schema(
-        tags=["Signup"],
-        operation_id="2_signup",
-        description="회원가입을 위한 API.",
-        request=SignupSerializer,
-        responses={201: SignupSerializer, 400: ErrorResponseSerializer},
-        examples=[SIGNUP_REQUEST_EXAMPLE, SIGNUP_SUCCESS_EXAMPLE, SIGNUP_ERROR_EXAMPLE],
-    )
+    # 회원가입 기능
     def post(self, request):
         # 요청 데이터를 직렬화
         serializer = SignupSerializer(data=request.data)
@@ -97,7 +96,7 @@ class LoginAPIView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# 인증 테스트 기능
+
 @extend_schema(
     tags=["Auth-Test"],
     operation_id="3_auth_test",
@@ -113,5 +112,6 @@ class LoginAPIView(APIView):
 class AuthTestAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
+    # 인증 테스트 기능
     def get(self, request):
         return Response({"message": "인증 성공"}, status=status.HTTP_200_OK)
