@@ -29,9 +29,9 @@ urlpatterns = [
 ]
 
 # API 문서화 URL 패턴
-# - /swagger: 과제 요구사항에 따라 Swagger UI 메인 접속 경로로 설정
+# - /swagger: Swagger UI 메인 접속 경로
 # - /schema/: API 스키마 JSON 파일 접근 경로
-# - /redoc/: ReDoc UI 접속 경로 (Swagger UI의 대체 버전)
+# - /redoc/: ReDoc UI 접속 경로
 urlpatterns += [
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
