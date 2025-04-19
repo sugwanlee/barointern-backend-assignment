@@ -36,7 +36,7 @@ schemas.py에서 API 문서화 관련 코드를 모듈화하여:
 @extend_schema(
     tags=["Signup"],
     operation_id="2_signup",
-    description="회원가입을 위한 API. \n과제 요구사항에 따라 비밀번호 유효성 검사 수정(CommonPasswordValidator, NumericPasswordValidator 주석처리)",
+    description="회원가입을 위한 API. 과제 요구사항에 따라 비밀번호 유효성 검사 수정(CommonPasswordValidator, NumericPasswordValidator 주석처리)",
     request=SignupSerializer,
     responses={201: SignupSerializer, 400: ErrorResponseSerializer},
     examples=[SIGNUP_REQUEST_EXAMPLE, SIGNUP_SUCCESS_EXAMPLE, SIGNUP_ERROR_EXAMPLE],
@@ -68,7 +68,7 @@ class SignupAPIView(APIView):
 @extend_schema(
     tags=["Login"],
     operation_id="1_login",
-    description="로그인을 위한 API. \n과제 요구사항에 따라 비밀번호 유효성 검사 옵션 수정(CommonPasswordValidator, NumericPasswordValidator 주석처리)",
+    description="로그인을 위한 API. 과제 요구사항에 따라 비밀번호 유효성 검사 옵션 수정(CommonPasswordValidator, NumericPasswordValidator 주석처리)",
     request=LoginSerializer,
     responses={200: TokenResponseSerializer, 400: ErrorResponseSerializer},
     examples=[LOGIN_REQUEST_EXAMPLE, LOGIN_SUCCESS_EXAMPLE, LOGIN_ERROR_EXAMPLE],
