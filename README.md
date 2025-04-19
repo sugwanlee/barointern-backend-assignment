@@ -80,7 +80,6 @@ nano .env
 
 # 환경 변수 설정
 SECRET_KEY=your_secret_key
-DEBUG=True
 ```
 
 ### 2. 서버 실행
