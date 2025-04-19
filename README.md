@@ -1,4 +1,5 @@
 # 바로인턴 백엔드 과제
+ - 배포 주소: http://3.38.135.6:8000
 
 ## 개요
 바로인턴 백엔드 개발자 인턴 선발을 위한 과제로, 사용자 인증 시스템을 구현한 RESTful API 서버입니다. JWT 기반 인증, 회원가입/로그인 API, 그리고 테스트 및 문서화를 포함합니다.
@@ -9,6 +10,7 @@
 - 회원가입 API: 사용자 정보를 입력받아 계정 생성
 - 로그인 API: 사용자 인증 및 JWT 토큰 발급
 - 인증 테스트 API: 토큰 유효성 검증용 엔드포인트
+- 비밀번호 유효성 검사 규칙 수정: 공통 비밀번호 및 숫자만으로 구성된 비밀번호 제한 해제 (최소 8자 길이만 유지)
 
 ### 2. JWT 인증
 - Simple JWT 라이브러리를 활용한 토큰 기반 인증 구현
@@ -24,12 +26,19 @@
 - 각 API의 요청/응답 구조 및 예시 제공
 - `/swagger` 경로에서 문서 확인 가능
 
+### 5. AWS EC2 배포
+- AWS EC2 인스턴스에 배포 완료
+- Gunicorn을 사용하여 백그라운드에서 안정적으로 실행
+- 접속 정보: `http://3.38.135.6:8000` --> 과제 요구사항 대로 0.0.0.0:8000으로 배포
+- API 문서: `http://3.38.135.6:8000/swagger` 
+
 ## 기술 스택
 - **언어 및 프레임워크**: Python 3.11, Django 5.2, Django REST Framework 3.16.0
 - **인증**: Simple JWT
 - **문서화**: drf-spectacular (Swagger/OpenAPI)
 - **데이터베이스**: SQLite
 - **테스트**: Django Test Framework
+- **배포**: AWS EC2, Gunicorn
 
 ## 폴더 구조
 ```
@@ -96,17 +105,15 @@ python manage.py runserver
 - 로그인: POST `/login/`
 - 인증 테스트: POST `/auth-test/`
 
-## API 엔드포인트
-
 ### 회원가입 API
 - URL: `/signup/`
 - Method: POST
 - Request Body:
   ```json
   {
-    "username": "testuser",
-    "password": "password123",
-    "nickname": "testnickname"
+    "username": "JIN HO2",
+    "password": "12341232",
+    "nickname": "Mentos"
   }
   ```
 - Response: 201 Created
@@ -117,8 +124,8 @@ python manage.py runserver
 - Request Body:
   ```json
   {
-    "username": "testuser",
-    "password": "password123"
+    "username": "JIN HO2",
+    "password": "12341232",
   }
   ```
 - Response: 200 OK (JWT 토큰 포함)
